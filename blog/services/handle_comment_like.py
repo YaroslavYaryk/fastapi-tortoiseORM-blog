@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 
-from blog.models import PostCommentLike
+from blog.models import PostComment, PostCommentLike
 from blog.schemas import Status
-from blog.pydantic_schemas import PostCommentLikePydantic
+from blog.pydantic_schemas import PostCommentLikePydantic, PostCommentPydantic
 
 
 async def create_like_to_comment(comment_id, user_id):
@@ -33,3 +33,11 @@ async def handle_get_all_comment_likes(id):
     return await PostCommentLikePydantic.from_queryset(
         PostCommentLike.filter(comment_id=id)
     )
+
+
+
+async def handle_get_comment_likes_for_blog(id):
+    comment_queryset = await PostCommentPydantic.from_queryset(PostComment.filter(post_id=id))
+    comment_ids = [elem.id for elem in comment_queryset]
+    
+    return await PostCommentLikePydantic.from_queryset(PostCommentLike.filter(comment__id__in=comment_ids))

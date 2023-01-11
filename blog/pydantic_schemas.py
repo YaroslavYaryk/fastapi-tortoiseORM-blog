@@ -9,7 +9,7 @@ Tortoise.init_models(["blog.models", "users.models"], "models")
 
 # Post schemas
 PostPydantic = pydantic_model_creator(
-    Post, name="Post", include=("id", "title", "body", "author_id", "likes")
+    Post, name="Post", include=("id", "title", "body", "author_id", "likes", "author_name")
 )
 PostCreatePydantic = pydantic_model_creator(
     Post, name="PostIn", exclude_readonly=True, exclude=("author_id",)

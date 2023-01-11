@@ -22,7 +22,7 @@ from .pydantic_schemas import (
     PostCommentLikePydantic,
 )
 from .schemas import (
-    PostBase,
+    CommentLikeSchema, GetCommentBase, PostBase,PostBaseList,
     PostCommentBase,
     PostCommentReply,
     PostCommentSingle,
@@ -35,7 +35,7 @@ from users.oauth2 import get_current_user
 router = APIRouter(prefix="/blogs")
 
 
-@router.get("", response_model=List[PostBase], tags=["blog"])
+@router.get("/", response_model=List[PostBaseList], tags=["blog"])
 async def get_all_posts():
     return await handle_post.handle_get_all_posts()
 
@@ -45,13 +45,13 @@ async def get_posts_for_user(id):
     return await handle_post.handle_get_posts_for_user(id)
 
 
-@router.post("/", response_model=PostPydantic, tags=["blog"])
+@router.post("/", response_model=PostBaseList, tags=["blog"])
 async def create_post(post: PostCreatePydantic, current_user=Depends(get_current_user)):
     return await handle_post.handle_create_post(post, current_user)
 
 
 @router.get(
-    "/{id}",
+    "/{id}/",
     response_model=PostSingle,
     responses={404: {"model": HTTPNotFoundError}},
     tags=["blog"],
@@ -61,7 +61,7 @@ async def get_one_post(id):
 
 
 @router.put(
-    "/{id}",
+    "/{id}/",
     response_model=PostPydantic,
     responses={404: {"model": HTTPNotFoundError}},
     tags=["blog"],
@@ -73,7 +73,7 @@ async def change_one_post(
 
 
 @router.delete(
-    "/{id}",
+    "/{id}/",
     response_model=Status,
     responses={404: {"model": HTTPNotFoundError}},
     tags=["blog"],
@@ -116,10 +116,21 @@ async def create_comment_to_post(
     "/{id}/comment/",
     responses={404: {"model": HTTPNotFoundError}},
     tags=["blog comment"],
-    response_model=List[PostCommentBase],
+    response_model=List[GetCommentBase],
 )
 async def get_all_post_comments(id: int):
     return await handle_post_comment.handle_get_all_post_comments(id)
+
+
+@router.get(
+    "/{id}/comment-likes/",
+    responses={404: {"model": HTTPNotFoundError}},
+    tags=["blog comment"],
+    response_model=List[CommentLikeSchema],
+)
+async def get_comment_likes_for_blog(id: int):
+    return await handle_comment_like.handle_get_comment_likes_for_blog(id)
+
 
 
 @router.get(
