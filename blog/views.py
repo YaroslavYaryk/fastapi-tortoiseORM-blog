@@ -22,7 +22,7 @@ from .pydantic_schemas import (
     PostCommentLikePydantic,
 )
 from .schemas import (
-    CommentLikeSchema, GetCommentBase, PostBase,PostBaseList,
+    CommentLikeSchema, CommentPostSchema, GetCommentBase, PostBase,PostBaseList,
     PostCommentBase,
     PostCommentReply,
     PostCommentSingle,
@@ -102,7 +102,7 @@ async def get_all_post_likes(id: int):
     "/{id}/comment/",
     responses={404: {"model": HTTPNotFoundError}},
     tags=["blog comment"],
-    response_model=PostCommentPydantic,
+    response_model=CommentPostSchema,
 )
 async def create_comment_to_post(
     id: int, comment: PostCommentCreatePydantic, current_user=Depends(get_current_user)

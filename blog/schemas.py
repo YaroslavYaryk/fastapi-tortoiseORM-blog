@@ -21,6 +21,10 @@ class CommentSchema(BaseModel):
     user_name:Optional[str]=None
     # parent_id: Optional[int] = None
     
+
+class CommentPostSchema(CommentSchema):
+    parent_id: Optional[int] = None
+    
     
 class CommentLikeSchema(BaseModel):
     id: int

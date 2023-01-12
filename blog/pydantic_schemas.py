@@ -34,7 +34,7 @@ PostLikeCreatePydantic = pydantic_model_creator(
 PostCommentPydantic = pydantic_model_creator(
     PostComment,
     name="PostComment",
-    include=("id", "post_id", "user_id", "comment", "parent_id"),
+    include=("id", "post_id", "user_id", "comment", "parent_id","user_name"),
 )
 PostCommentCreatePydantic = pydantic_model_creator(
     PostComment,

@@ -16,7 +16,12 @@ async def handle_create_comment_to_post(
     post_comment = await PostComment.create(
         **comment.dict(), post_id=id, user_id=current_user["id"]
     )
-    return await PostCommentPydantic.from_tortoise_orm(post_comment)
+    comment =  await PostCommentPydantic.from_tortoise_orm(post_comment)
+
+    return {
+        **comment.dict(),
+        "user_name": (await get_author_by_id(current_user["id"])).username
+    }
 
 
 async def get_replies_to_comment(comment_id: int):
